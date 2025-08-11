@@ -1,8 +1,14 @@
 import React from "react";
 import Hero from "../components/Layout/Hero";
+import GenderCollection from "../components/Products/GenderCollection";
 
 const Home = () => {
-  return <Hero />;
+  return (
+    <div>
+      <Hero />
+      <GenderCollection></GenderCollection>
+    </div>
+  );
 };
 
 export default Home;
