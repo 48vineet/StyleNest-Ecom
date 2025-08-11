@@ -12,7 +12,7 @@ const NewArrivals = () => {
       },
     },
     {
-      _id: 1,
+      _id: 2,
       name: "Stylish Jacket",
       price: 120,
       images: {
