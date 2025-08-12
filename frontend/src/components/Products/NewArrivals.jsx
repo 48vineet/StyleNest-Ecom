@@ -1,5 +1,6 @@
 import React from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { Link } from "react-router-dom";
 const NewArrivals = () => {
   const NewArrivals = [
     {
@@ -97,11 +98,21 @@ const NewArrivals = () => {
       <div className="container mx-auto overflow-x-scroll flex space-x-6 relative">
         {NewArrivals.map((product) => {
           return (
-            <div key={product._id}>
+            <div
+              key={product._id}
+              className="min-w-[100%] sm:min-w-[50%] lg:min-w-[30%] relative"
+            >
               <img
                 src={product.images.url}
                 alt={product.images.altText || product.name}
+                className="w-full h-[500px] object-cover rounded-lg"
               />
+              <div className="absolute bottom-0 left-0 right-0 opacity-50 backdrop-blur-md text-white p-4 rounded-b-lg">
+                <Link to={`/product/${product._id}`} className="block">
+                  <h4 className="font-medium ">{product.name}</h4>
+                  <p className="mt-1 ">${product.price}</p>
+                </Link>
+              </div>
             </div>
           );
         })}
