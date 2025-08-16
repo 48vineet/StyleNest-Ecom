@@ -4,7 +4,7 @@ import GenderCollection from "../components/Products/GenderCollection";
 import NewArrivals from "../components/Products/NewArrivals";
 import ProductDetails from "../components/Products/ProductDetails";
 
-const Home = () => {
+const Home = () => { 
   return (
     <div>
       <Hero />
