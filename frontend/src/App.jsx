@@ -11,7 +11,7 @@ function App() {
         <Route> {/*Admin layout*/}</Route>
       </Routes>
     </BrowserRouter>
-  );
+  ); 
 }
 
 export default App;
