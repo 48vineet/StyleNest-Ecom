@@ -4,11 +4,16 @@ import login from "../assets/Login.jpeg";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
+  const handelsubmit = (e) => {
+    e.preventDefault();
+    console.log("user logged in :", { email, password });
+  };
+
   return (
     <div className="flex">
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12">
         <form
-          action=""
+          onSubmit={handelsubmit}
           className="w-full max-w-md bg-white p-8 rounded-lg border shadow-sm"
         >
           <div className="flex justify-center mb-6">
