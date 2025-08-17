@@ -120,11 +120,6 @@ const NewArrivals = () => {
       setCanScrollLeft(leftScroll > 0); // Corrected state update
       setCanScrollRight(rightScrollable);
     }
-    console.log({
-      scrollLeft: container.scrollLeft,
-      clientWidth: container.clientWidth,
-      containerScrollWidth: container.scrollWidth,
-    });
   };
 
   useEffect(() => {
