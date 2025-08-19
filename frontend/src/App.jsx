@@ -7,7 +7,7 @@ import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import CollectiomPage from "./pages/CollectiomPage";
 function App() {
-  return (
+  return ( 
     <BrowserRouter>
       <Toaster position="top-right" />
       <Routes>
