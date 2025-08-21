@@ -67,16 +67,23 @@ function ProductDetails({ products }) {
     },
   ];
 
-  const [mainImage, setMainImage] = useState("");
+  const [mainImage, setMainImage] = useState(""); // Initialize state
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedcolor, setSelectedcolor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   useEffect(() => {
-    if (selectedProduct?.images?.length > 0) {
-      setMainImage(selectedProduct.images[0].url);
+    // Only set the main image if it hasn't been set yet
+    if (!mainImage && selectedProduct?.images?.length > 0) {
+      setMainImage(selectedProduct.images[0].url); // Set the first image as the default
     }
-  }, [selectedProduct]); // ✅ Correct usage
+  }, [mainImage, selectedProduct]); // Ensure this runs only when `mainImage` or `selectedProduct` changes
+
+  // Debugging: Log the mainImage state to ensure it's being updated
+  useEffect(() => {
+    console.log("Main Image Updated:", mainImage);
+  }, [mainImage]);
+
   const handelQuantityChange = (action) => {
     if (action == "plus") setQuantity((prev) => prev + 1);
     if (action == "minus" && quantity > 1) setQuantity((prev) => prev - 1);
@@ -109,23 +116,27 @@ function ProductDetails({ products }) {
               <img
                 key={index}
                 src={image.url}
-                alt={image.altText || `Thumnail${index}`}
+                alt={image.altText || `Thumbnail ${index}`}
                 className={`w-20 h-20 object-cover rounded-lg cursor-pointer border ${
                   mainImage === image.url ? "border-black" : "bg-gray-300"
                 }`}
-                onClick={() => setMainImage(image.url)}
+                onClick={() => {
+                  setMainImage(image.url); // Update `mainImage` state
+                }}
               />
             ))}
           </div>
           {/* Main Image */}
           <div className="md:w-1/2">
             <div className="mb-4">
-              {mainImage && (
+              {mainImage ? (
                 <img
-                  src={mainImage}
+                  src={mainImage} // Use `mainImage` state for the main image
                   alt="Main Product"
                   className="w-full h-auto object-cover rounded-lg"
                 />
+              ) : (
+                <p>Loading image...</p> // Fallback in case `mainImage` is not set
               )}
             </div>
           </div>

@@ -6,6 +6,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import CollectiomPage from "./pages/CollectiomPage";
+import ProductDetails from "./components/Products/ProductDetails";
+import Checkout from "./components/Cart/Checkout";
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +22,11 @@ function App() {
             path="collections/:collection"
             element={<CollectiomPage></CollectiomPage>}
           ></Route>
+          <Route
+            path="product/:id"
+            element={<ProductDetails></ProductDetails>}
+          ></Route>
+          <Route path="checkout" element={<Checkout></Checkout>}></Route>
         </Route>
         <Route> {/*Admin layout*/}</Route>
       </Routes>

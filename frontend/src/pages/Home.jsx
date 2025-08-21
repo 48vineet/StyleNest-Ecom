@@ -90,7 +90,7 @@ const placeholderProducts = [
   },
 ];
 
-const Home = () => { 
+const Home = () => {
   return (
     <div>
       <Hero />
