@@ -3,7 +3,7 @@ import { Link, useParams } from "react-router-dom";
 const OrderDetailsPage = () => {
   const { id } = useParams();
   const [orderDetails, setOrderDetails] = useState(null);
-  useEffect(() => {
+  useEffect(() => { 
     const mockDetails = {
       _id: id,
       createdAt: new Date(),
