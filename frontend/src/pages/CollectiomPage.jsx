@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { FaFilter } from "react-icons/fa6";
 import FilterSidebar from "../components/Products/FilterSidebar";
 import SortOptions from "../components/Products/SortOptions";
-import ProductGrid from "../components/Products/ProductGrid";
+import ProductGrid from "../components/Products/ProductGrid"; 
 
 const CollectiomPage = () => {
   const [products, setProducts] = useState([]);
