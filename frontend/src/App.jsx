@@ -12,6 +12,11 @@ import Checkout from "./components/Cart/Checkout";
 import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import OrderDetailsPage from "./pages/OrderDetailsPage";
 import { MyOrdersPage } from "./pages/MyOrdersPage";
+import AdminLayout from "./components/Admin/AdminLayout";
+import AdminHomepage from "./pages/AdminHomepage";
+import UserManagement from "./components/Admin/UserManagement";
+import ProductManagment from "./components/Admin/ProductManagment";
+import EditProductPage from "./components/Admin/EditProductPage";
 
 function App() {
   return (
@@ -46,7 +51,12 @@ function App() {
           ></Route>
         </Route>
 
-        <Route> {/*Admin layout*/}</Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminHomepage />}></Route>
+          <Route path="users" element={<UserManagement />} />
+          <Route path="products" element={<ProductManagment />} />
+          <Route path="products/:id/edit" element={<EditProductPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   );
