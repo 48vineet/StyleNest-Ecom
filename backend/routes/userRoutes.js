@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 
-const router = express.Router();
+const router = express.Router(); 
 
 //? @route POST /api/user/register
 
