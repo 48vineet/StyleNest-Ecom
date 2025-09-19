@@ -2,6 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+<<<<<<< HEAD
+=======
+ 
+>>>>>>> 54d6f67b15f46df8015cbbd18d6b869c8cbec2a6
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
 
