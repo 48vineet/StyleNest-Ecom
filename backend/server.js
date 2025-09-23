@@ -17,12 +17,8 @@ const adminRoutes = require("./routes/adminRoutes");
 const productAdminRoutes = require("./routes/productAdminRoutes");
 const adminOrderRoutes = require("./routes/adminOrderRoutes");
 
-<<<<<<< HEAD
 const app = express();
 
-=======
-const app = express(); 
->>>>>>> 233b5db23c15f03518b73e8b0711c1ecb2380bf7
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 app.use(cors()); // Enable CORS
