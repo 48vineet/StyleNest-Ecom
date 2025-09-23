@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import login from "../assets/Login.jpeg";
+
+import { loginUser } from "../redux/slices/authSlice";
+import { useDispatch } from "react-redux";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setpassword] = useState("");
+
+  const dispatch = useDispatch();
+
   const handelsubmit = (e) => {
     e.preventDefault();
-    console.log("user logged in :", { email, password });
+    dispatch(loginUser({ email, password }));
   };
 
   return (
@@ -17,7 +24,7 @@ const Login = () => {
           className="w-full max-w-md bg-white p-8 rounded-lg border shadow-sm"
         >
           <div className="flex justify-center mb-6">
-            <h2 className="text-xl font-medium ">StyleNest</h2>
+            <h2 className="text-xl font-medium ">StyleNest</h2> 
           </div>
           <h2 className="text-2xl font-bold text-center mb-6">
             Good to see you again!

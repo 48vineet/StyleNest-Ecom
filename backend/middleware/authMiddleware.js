@@ -8,6 +8,8 @@ const protect = async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     try {
+      console.log(req.user);
+
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -27,7 +29,9 @@ const admin = (req, res, next) => {
   if (req.user && req.user.role === "admin") {
     next();
   } else {
-    res.status(403).json({ message: "Not authorized as an admin" });
+    console.log(req.user);
+
+    res.status(403).json({ message: "Not authorized as annn admin" });
   }
 };
 
