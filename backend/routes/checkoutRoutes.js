@@ -41,7 +41,7 @@ router.put("/:id/pay", protect, async (req, res) => {
   const { paymentStatus, paymentDetails } = req.body;
 
   try {
-    const checkout = Checkout.findById(req.params.id);
+    const checkout = await Checkout.findById(req.params.id);
 
     if (!checkout) {
       return res.status(404).json({ message: "Checkout not found" });

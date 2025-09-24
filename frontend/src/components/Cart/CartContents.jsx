@@ -1,30 +1,38 @@
 import React from "react";
 import { RiDeleteBin3Line } from "react-icons/ri";
+import { useDispatch } from "react-redux";
+import {
+  updateCartItemQuantity,
+  removeFromCart,
+} from "../../redux/slices/cartSlice";
 
-const CartContents = () => {
-  const CartProducts = [
-    {
-      productId: 1,
-      name: "T-shirt",
-      size: "M",
-      color: "Red",
-      quantity: 1,
-      price: 15,
-      image: "https://picsum.photos/200?random=1",
-    },
-    {
-      productId: 2,
-      name: "Jeans",
-      size: "L",
-      color: "Blue",
-      quantity: 1,
-      price: 25,
-      image: "https://picsum.photos/200?random=2",
-    },
-  ];
+const CartContents = ({ cart, userId, guestId }) => {
+  const dispatch = useDispatch();
+
+  //! handel adding or substracting
+  const handleToCart = (productId, delta, quantity, size, color) => {
+    const newQuantity = quantity + delta;
+    if (newQuantity >= 1) {
+      dispatch(
+        updateCartItemQuantity({
+          productId,
+          quantity: newQuantity,
+          guestId,
+          userId,
+          size,
+          color,
+        })
+      );
+    }
+  };
+
+  const handleRemoveFromCart = (productId, size, color) => {
+    dispatch(removeFromCart({ productId, guestId, userId, size, color }));
+  };
+
   return (
     <div>
-      {CartProducts.map((product, index) => {
+      {cart.products.map((product, index) => {
         return (
           <div
             key={index}
@@ -42,11 +50,33 @@ const CartContents = () => {
                   Size: {product.size} | Color: {product.color}
                 </p>
                 <div className="flex items-center mt-2">
-                  <button className="bg-white hover:bg-gray-200 rounded-md w-8 h-8 text-lg font-bold flex items-center justify-center">
+                  <button
+                    onClick={() =>
+                      handleToCart(
+                        product.productId,
+                        -1,
+                        product.quantity,
+                        product.size,
+                        product.color
+                      )
+                    }
+                    className="bg-white hover:bg-gray-200 rounded-md w-8 h-8 text-lg font-bold flex items-center justify-center"
+                  >
                     -
                   </button>
                   <span className="mx-3">{product.quantity}</span>
-                  <button className="bg-white hover:bg-gray-200 rounded-md w-8 h-8 text-lg font-bold flex items-center justify-center">
+                  <button
+                    onClick={() =>
+                      handleToCart(
+                        product.productId,
+                        1,
+                        product.quantity,
+                        product.size,
+                        product.color
+                      )
+                    }
+                    className="bg-white hover:bg-gray-200 rounded-md w-8 h-8 text-lg font-bold flex items-center justify-center"
+                  >
                     +
                   </button>
                 </div>
@@ -54,7 +84,15 @@ const CartContents = () => {
             </div>
             <div>
               <p>$ {product.price.toLocaleString()}</p>
-              <button>
+              <button
+                onClick={() =>
+                  handleRemoveFromCart(
+                    product.productId,
+                    product.size,
+                    product.color
+                  )
+                }
+              >
                 <RiDeleteBin3Line className="h-6 w-6 mt-3 ms-2 text-red-600"></RiDeleteBin3Line>
               </button>
             </div>

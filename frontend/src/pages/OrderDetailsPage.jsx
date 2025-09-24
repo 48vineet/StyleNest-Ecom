@@ -1,36 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
+import { fetchOrderDetails } from "../redux/slices/orderSlice";
 const OrderDetailsPage = () => {
   const { id } = useParams();
-  const [orderDetails, setOrderDetails] = useState(null);
-  useEffect(() => { 
-    const mockDetails = {
-      _id: id,
-      createdAt: new Date(),
-      isPaid: true,
-      isDelivered: false,
-      paymentMethod: "PayPal",
-      shippingMethod: "Standard",
-      shippingAdress: { city: "Mumbai", country: "India" },
-      orderItems: [
-        {
-          productId: "1",
-          name: "jacket",
-          price: 120,
-          quantity: 1,
-          image: "https://picsum.photos/150?random=1",
-        },
-        {
-          productId: "2",
-          name: "T-Shirt",
-          price: 90,
-          quantity: 2,
-          image: "https://picsum.photos/150?random=2",
-        },
-      ],
-    };
-    setOrderDetails(mockDetails);
-  }, [id]);
+
+  const dispatch = useDispatch();
+  const { orderDetails, loading, error } = useSelector((state) => state.orders);
+
+  useEffect(() => {
+    dispatch(fetchOrderDetails(id));
+  }, [dispatch, id]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error {error}</p>;
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6">
       <h2 className="text-2xl md:text-3xl font-bold mb-6">Order Details</h2>
@@ -80,8 +64,8 @@ const OrderDetailsPage = () => {
               <h4 className="text-lg font-semibold mb-2">Shipping Info</h4>
               <p>Shipping Method : {orderDetails.shippingMethod}</p>
               <p>
-                Address :{" "}
-                {`${orderDetails.shippingAdress.city} , ${orderDetails.shippingAdress.country}`}
+                Address :
+                {`${orderDetails.shippingAddress.city} , ${orderDetails.shippingAddress.country}`}
               </p>
             </div>
           </div>
@@ -114,7 +98,7 @@ const OrderDetailsPage = () => {
                       </Link>
                     </td>
                     <td className="py-2 px-4">${item.price}</td>
-                    <td className="py-2 px-4">${item.quantity}</td>
+                    <td className="py-2 px-4">{item.quantity}</td>
                     <td className="py-2 px-4">${item.price * item.quantity}</td>
                   </tr>
                 ))}

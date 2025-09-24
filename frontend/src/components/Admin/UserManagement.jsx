@@ -13,15 +13,13 @@ const UserManagement = () => {
   const navigate = useNavigate();
 
   const { user } = useSelector((state) => state.auth);
-
   const { users, loading, error } = useSelector((state) => state.admin);
 
-  // Add this useEffect to fetch users
   useEffect(() => {
     if (user && user.role !== "admin") {
       navigate("/");
     } else {
-      dispatch(fetchAllUsers()); // ADD THIS LINE
+      dispatch(fetchAllUsers());
     }
   }, [user, navigate, dispatch]);
 
@@ -29,7 +27,7 @@ const UserManagement = () => {
     name: "",
     email: "",
     password: "",
-    role: "customer", //? Default Role
+    role: "customer",
   });
 
   const handelChange = (e) => {
@@ -39,42 +37,50 @@ const UserManagement = () => {
     });
   };
 
-  const handelSubmit = (e) => {
+  const handelSubmit = async (e) => {
     e.preventDefault();
-    dispatch(addUser(formData));
 
-    //! Resets form after subbmision
+    // Add user and wait for completion
+    await dispatch(addUser(formData));
+
+    // Reset form after submission
     setFormData({
       name: "",
       email: "",
       password: "",
       role: "customer",
     });
-    window.location.reload();
+
+    // Refetch users instead of page reload
+    dispatch(fetchAllUsers());
   };
 
-  const handelRoleChange = (userId, newRole) => {
-    dispatch(updateUser({ id: userId, role: newRole }));
+  const handelRoleChange = async (userId, newRole) => {
+    await dispatch(updateUser({ id: userId, role: newRole }));
+    // Refetch users to show updated data
+    dispatch(fetchAllUsers());
   };
 
-  const handelDeleteUser = (userId) => {
-    if (window.confirm("Are you sre you want to delete this user ?")) {
-      dispatch(deleteUser(userId));
+  const handelDeleteUser = async (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      await dispatch(deleteUser(userId));
+      // Refetch users instead of page reload
+      dispatch(fetchAllUsers());
     }
-    window.location.reload();
   };
 
   return (
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-2xl font-bold mb-6">User Management</h2>
-      {loading && <p> Loading...</p>}
-      {error && <p> Error : {error}</p>}
+      {loading && <p>Loading...</p>}
+      {error && <p>Error: {error}</p>}
+
       {/* User Form */}
       <div className="p-6 rounded-lg mb-6">
         <h3 className="text-lg font-bold mb-4">Add New User</h3>
         <form onSubmit={handelSubmit}>
-          <div className="mb-4 ">
-            <label className="block text-gray-700 ">Name</label>
+          <div className="mb-4">
+            <label className="block text-gray-700">Name</label>
             <input
               type="text"
               name="name"
@@ -84,8 +90,8 @@ const UserManagement = () => {
               required
             />
           </div>
-          <div className="mb-4 ">
-            <label className="block text-gray-700 ">Email</label>
+          <div className="mb-4">
+            <label className="block text-gray-700">Email</label>
             <input
               type="email"
               name="email"
@@ -95,8 +101,8 @@ const UserManagement = () => {
               required
             />
           </div>
-          <div className="mb-4 ">
-            <label className="block text-gray-700 ">Password</label>
+          <div className="mb-4">
+            <label className="block text-gray-700">Password</label>
             <input
               type="password"
               name="password"
@@ -106,8 +112,8 @@ const UserManagement = () => {
               required
             />
           </div>
-          <div className="mb-4 ">
-            <label className="block text-gray-700 ">Role</label>
+          <div className="mb-4">
+            <label className="block text-gray-700">Role</label>
             <select
               name="role"
               value={formData.role}
@@ -121,11 +127,13 @@ const UserManagement = () => {
           <button
             type="submit"
             className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+            disabled={loading}
           >
-            Add User
+            {loading ? "Adding..." : "Add User"}
           </button>
         </form>
       </div>
+
       {/* User List Management */}
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-gray-500">
@@ -149,6 +157,7 @@ const UserManagement = () => {
                     value={user.role}
                     onChange={(e) => handelRoleChange(user._id, e.target.value)}
                     className="p-2 border rounded"
+                    disabled={loading}
                   >
                     <option value="customer">Customer</option>
                     <option value="admin">Admin</option>
@@ -156,10 +165,11 @@ const UserManagement = () => {
                 </td>
                 <td className="p-4">
                   <button
-                    className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-white"
+                    className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded-lg text-white disabled:opacity-50"
                     onClick={() => handelDeleteUser(user._id)}
+                    disabled={loading}
                   >
-                    Delete
+                    {loading ? "Deleting..." : "Delete"}
                   </button>
                 </td>
               </tr>

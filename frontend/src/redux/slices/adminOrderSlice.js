@@ -67,7 +67,7 @@ const adminOrderSlice = createSlice({
   initialState: {
     orders: [],
     totalOrders: 0,
-    totalSlates: 0,
+    totalSales: 0,
     loading: false,
     error: null,
   },

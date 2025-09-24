@@ -1,48 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUserOrders } from "../redux/slices/orderSlice";
 
 export const MyOrdersPage = () => {
-  const [orders, setOrders] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { orders, loading, error } = useSelector((state) => state.orders);
+
   useEffect(() => {
-    setTimeout(() => {
-      const mockOrders = [
-        {
-          _id: 1234,
-          createAt: new Date(),
-          shippingAddress: {
-            city: "Mumbai",
-            country: "India",
-          },
-          orderItems: [
-            {
-              name: "Product 1",
-              image: "https://picsum.photos/500/500?random=1",
-            },
-          ],
-          totalPrice: 100,
-          isPaid: true,
-        },
-        {
-          _id: 3456,
-          createAt: new Date(),
-          shippingAddress: {
-            city: "Gujrat",
-            country: "India",
-          },
-          orderItems: [
-            {
-              name: "Product 2",
-              image: "https://picsum.photos/500/500?random=2",
-            },
-          ],
-          totalPrice: 100,
-          isPaid: true,
-        },
-      ];
-      setOrders(mockOrders);
-    }, 1000);
-  }, []);
+    dispatch(fetchUserOrders());
+  }, [dispatch]);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error {error}</p>;
 
   const handelRowClick = (orderId) => {
     navigate(`/order/${orderId}`);
@@ -83,9 +54,9 @@ export const MyOrdersPage = () => {
                     # {order._id}
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
-                    {new Date(order.createAt).toLocaleDateString()}
+                    {new Date(order.createdAt).toLocaleDateString()}
                     {" | "}
-                    {new Date(order.createAt).toLocaleTimeString()}
+                    {new Date(order.createdAt).toLocaleTimeString()}
                   </td>
                   <td className="py-2 px-2 sm:py-4 sm:px-4">
                     {order.shippingAddress

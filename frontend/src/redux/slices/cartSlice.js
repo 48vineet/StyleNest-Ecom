@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { use } from "react";
 
 //! helper fucntion to get cart from local storage
 
@@ -64,7 +63,7 @@ export const updateCartItemQuantity = createAsyncThunk(
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/api/cart/`,
-        { userId, guestId, quantity, size, color }
+        { userId, guestId, quantity, productId, size, color }
       );
       return response.data;
     } catch (error) {
@@ -79,11 +78,13 @@ export const removeFromCart = createAsyncThunk(
   "cart/removeFromCart",
   async ({ userId, guestId, productId, size, color }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete({
-        method: "DELETE",
-        url: `${import.meta.env.VITE_API_URL}/api/cart`,
-        data: { userId, guestId, productId, size, color },
-      });
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/api/cart`,
+        {
+          data: { userId, guestId, productId, size, color },
+        }
+      );
+
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);

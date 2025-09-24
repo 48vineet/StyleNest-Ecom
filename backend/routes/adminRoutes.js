@@ -2,6 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const { protect, admin } = require("../middleware/authMiddleware");
 const { route } = require("./userRoutes");
+const mongoose = require("mongoose");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
 
 router.get("/", protect, admin, async (req, res) => {
   try {
-    const user = await User.findOne({});
+    const user = await User.find({});
     res.json(user);
   } catch (error) {
     console.error(error);
@@ -73,9 +74,10 @@ router.put("/:id", protect, admin, async (req, res) => {
 
 //! Delete /api/admin/users/:id
 
-router.delete("/:id", admin, protect, async (req, res) => {
+router.delete("/:id", protect, admin, async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id);
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid User ID" });

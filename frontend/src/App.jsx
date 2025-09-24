@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
-import CollectiomPage from "./pages/CollectiomPage";
+import CollectionPage from "./pages/CollectionPage";
 
 import ProductDetails from "./components/Products/ProductDetails";
 import Checkout from "./components/Cart/Checkout";
@@ -21,6 +21,7 @@ import OrderManagment from "./components/Admin/OrderManagment";
 
 import { Provider } from "react-redux";
 import store from "./redux/store";
+import ProtectedRoutes from "./components/Common/ProtectedRoutes";
 
 function App() {
   return (
@@ -35,7 +36,7 @@ function App() {
             <Route path="profile" element={<Profile></Profile>}></Route>
             <Route
               path="collections/:collection"
-              element={<CollectiomPage></CollectiomPage>}
+              element={<CollectionPage></CollectionPage>}
             ></Route>
             <Route
               path="product/:id"
@@ -56,7 +57,14 @@ function App() {
             ></Route>
           </Route>
 
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoutes role="admin">
+                <AdminLayout />
+              </ProtectedRoutes>
+            }
+          >
             <Route index element={<AdminHomepage />}></Route>
             <Route path="users" element={<UserManagement />} />
             <Route path="products" element={<ProductManagment />} />

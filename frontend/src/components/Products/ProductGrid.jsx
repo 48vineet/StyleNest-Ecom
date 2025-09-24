@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-const ProductGrid = ({ products }) => {
+const ProductGrid = ({ products, loading, error }) => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
 
@@ -10,6 +10,9 @@ const ProductGrid = ({ products }) => {
       setMainImage(selectedProduct.images[0].url);
     }
   }, [selectedProduct]);
+
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error loading products: {error}</p>;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">

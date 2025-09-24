@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 
 const SortOptions = () => {
-  const [searchParams, setSearchParams] = useSearchParams;
+  const [searchParams, setSearchParams] = useSearchParams();
   const handelSortChange = (e) => {
     const sortBy = e.target.value;
     searchParams.set("sortBy", sortBy);
