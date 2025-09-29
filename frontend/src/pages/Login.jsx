@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import login from "../assets/Login.jpeg";
+import login from "../assets/login.webp";
 
 import { loginUser } from "../redux/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,7 +13,7 @@ const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, guestId } = useSelector((state) => state.auth);
+  const { user, guestId, loading } = useSelector((state) => state.auth);
   const { cart } = useSelector((state) => state.cart);
 
   //get redirect parameter of check if its checkout or something else
@@ -78,7 +78,7 @@ const Login = () => {
             type="submit"
             className="w-full bg-black text-white p-2 rounded-lg font-semibold hover:bg-gray-800 transition"
           >
-            Log In
+            {loading ? "Loading " : "Log In"}
           </button>
           <p className="mt-6 text-center text-sm">
             Don't have an account?{" "}

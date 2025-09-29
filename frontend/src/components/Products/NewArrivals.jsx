@@ -132,8 +132,8 @@ const NewArrivals = () => {
             >
               <img
                 draggable="false"
-                src={product.images.url}
-                alt={product.images.altText || product.name}
+                src={product.images[0]?.url}
+                alt={product.images[0]?.altText || product.name}
                 className="w-full h-[500px] object-cover rounded-lg"
               />
               <div className="absolute bottom-0 left-0 right-0 opacity-50 backdrop-blur-md text-white p-4 rounded-b-lg">

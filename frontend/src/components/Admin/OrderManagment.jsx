@@ -1,33 +1,47 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import {
+  fetchAllOrders,
+  updateOrderStatus,
+} from "../../redux/slices/adminOrderSlice";
 
-const OrderManagment = () => {
-  const orders = [
-    {
-      _id: 123123123,
-      user: {
-        name: "John Doe",
-      },
-      totalPrice: 120,
-      status: "Processing",
-    },
-  ];
+const OrderManagement = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleStatusChange = (orderId, status) => {
-    console.log({ id: orderId, status: status });
+  const { user } = useSelector((state) => state.auth);
+  const { orders, loading, error } = useSelector((state) => state.adminOrders);
+
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      navigate("/");
+    } else {
+      dispatch(fetchAllOrders());
+    }
+  }, [dispatch, user, navigate]);
+
+  const handleStatusChange = async (orderId, status) => {
+    await dispatch(updateOrderStatus({ id: orderId, status }));
+    // Refetch orders to show updated status
+    dispatch(fetchAllOrders());
   };
 
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <div className="max-w-7xl mx-auto p-6 ">
-      <h2 className="text-2xl font-bold mb-6 ">Order Management</h2>
-      <div className="overflow-x-auto shadow-md md:rounded-lg ">
+    <div className="max-w-7xl mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-6">Order Management</h2>
+      <div className="overflow-x-auto shadow-md md:rounded-lg">
         <table className="min-w-full text-left text-gray-500">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-700 ">
+          <thead className="bg-gray-100 text-xs uppercase text-gray-700">
             <tr>
-              <th className="py-3 px-4 ">Order ID</th>
-              <th className="py-3 px-4 ">Customer</th>
-              <th className="py-3 px-4 ">Total Price</th>
-              <th className="py-3 px-4 ">Status</th>
-              <th className="py-3 px-4 ">Actions</th>
+              <th className="py-3 px-4">Order ID</th>
+              <th className="py-3 px-4">Customer</th>
+              <th className="py-3 px-4">Total Price</th>
+              <th className="py-3 px-4">Status</th>
+              <th className="py-3 px-4">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -40,7 +54,10 @@ const OrderManagment = () => {
                   <td className="py-4 px-4 font-medium text-gray-900 whitespace-nowrap">
                     #{order._id}
                   </td>
-                  <td className="p-4">{order.user.name}</td>
+                  <td className="p-4">
+                    {/* Handle null user with optional chaining and fallback */}
+                    {order.user?.name || "Deleted User"}
+                  </td>
                   <td className="p-4">${order.totalPrice}</td>
                   <td className="p-4">
                     <select
@@ -49,6 +66,7 @@ const OrderManagment = () => {
                         handleStatusChange(order._id, e.target.value)
                       }
                       className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5"
+                      disabled={loading}
                     >
                       <option value="Processing">Processing</option>
                       <option value="Shipped">Shipped</option>
@@ -59,9 +77,10 @@ const OrderManagment = () => {
                   <td className="p-4">
                     <button
                       onClick={() => handleStatusChange(order._id, "Delivered")}
-                      className="bg-green-500 text-white px-4 py-2 hover:bg-green-600 rounded-lg"
+                      className="bg-green-500 text-white px-4 py-2 hover:bg-green-600 rounded-lg disabled:opacity-50"
+                      disabled={loading}
                     >
-                      Mark As Delivered
+                      {loading ? "Updating..." : "Mark As Delivered"}
                     </button>
                   </td>
                 </tr>
@@ -80,4 +99,4 @@ const OrderManagment = () => {
   );
 };
 
-export default OrderManagment;
+export default OrderManagement;

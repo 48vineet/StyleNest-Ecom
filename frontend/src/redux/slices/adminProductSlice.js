@@ -68,15 +68,12 @@ export const deleteProduct = createAsyncThunk(
   "admin/deleteProduct",
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/admin/products/${id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-          },
-        }
-      );
-      return response.data;
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+        },
+      });
+      return id; // Return the ID for filtering
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
@@ -144,8 +141,9 @@ const adminSlice = createSlice({
       })
       .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = false;
+        // Filter using the returned ID
         state.products = state.products.filter(
-          (product) => product._id !== action.payload._id
+          (product) => product._id !== action.payload
         );
       })
       .addCase(deleteProduct.rejected, (state, action) => {
