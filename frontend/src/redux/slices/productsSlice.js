@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 //! create thunk to fetch the products
+
 export const fetchProductsByFilters = createAsyncThunk(
   "products/fetchByFilters",
   async ({
@@ -40,6 +41,7 @@ export const fetchProductsByFilters = createAsyncThunk(
 );
 
 //! create thunk to fetch single product
+
 export const fetchProductById = createAsyncThunk(
   "products/fetchById",
   async (id) => {
@@ -51,6 +53,7 @@ export const fetchProductById = createAsyncThunk(
 );
 
 //! add thunk to update product (admin)
+
 export const updateProduct = createAsyncThunk(
   "products/updateProduct",
   async ({ id, productData }) => {
@@ -68,6 +71,7 @@ export const updateProduct = createAsyncThunk(
 );
 
 //! async thunk to fetch similar products
+
 export const fetchSimilarProducts = createAsyncThunk(
   "products/fetchSimilar",
   async ({ id }) => {
@@ -82,7 +86,7 @@ const productSlice = createSlice({
   name: "products",
   initialState: {
     products: [],
-    selectedProduct: null, // Fixed: changed from selectedProducts to selectedProduct
+    selectedProducts: null, //? stiore single product details
     similarProducts: [],
     loading: false,
     error: null,
@@ -91,7 +95,7 @@ const productSlice = createSlice({
       size: "",
       color: "",
       gender: "",
-      brand: "", // Fixed: changed from brnad to brand
+      brnad: "",
       minPrice: "",
       maxPrice: "",
       sortBy: "",
@@ -110,7 +114,7 @@ const productSlice = createSlice({
         size: "",
         color: "",
         gender: "",
-        brand: "", // Fixed: changed from brnad to brand
+        brnad: "",
         minPrice: "",
         maxPrice: "",
         sortBy: "",
@@ -118,9 +122,6 @@ const productSlice = createSlice({
         material: "",
         collection: "",
       };
-    },
-    clearSelectedProduct: (state) => {
-      state.selectedProduct = null;
     },
   },
   extraReducers: (builder) => {
@@ -158,15 +159,11 @@ const productSlice = createSlice({
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
         state.loading = false;
-        const updatedProduct = action.payload; // Fixed: use action.payload
-        state.selectedProduct = updatedProduct; // Update selectedProduct with new data
-        // Update the product in the products array if it exists
+        state.updateProduct = action.payload;
         const index = state.products.findIndex(
-          (product) => product._id === updatedProduct._id // Fixed: use updatedProduct
+          (product) => product._id === updateProduct._id
         );
-        if (index !== -1) {
-          state.products[index] = updatedProduct; // Fixed: use updatedProduct
-        }
+        if (index !== -1) state.products[index] = updateProduct;
       })
       .addCase(updateProduct.rejected, (state, action) => {
         state.loading = false;
@@ -188,6 +185,5 @@ const productSlice = createSlice({
   },
 });
 
-export const { setFilters, clearFilters, clearSelectedProduct } =
-  productSlice.actions;
+export const { setFilters, clearFilters } = productSlice.actions;
 export default productSlice.reducer;
