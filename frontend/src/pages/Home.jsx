@@ -80,15 +80,21 @@ const Home = () => {
       <NewArrivals />
 
       {/* Best Seller Section */}
-      <div className="container mx-auto mb-8">
-        <h2 className="text-3xl text-center font-semibold mb-4">Best Seller</h2>
+
+      <div className="text-center mb-">
+        <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-4">
+          Best Seller
+        </h2>
+        <div className="w-24 h-px bg-gray-900 mx-auto mb-6"> </div>
         {renderBestSeller()}
       </div>
 
-      <div className="container mx-auto">
-        <h2 className="text-3xl text-center font-semibold mb-4">
+      <div className="container text-center mx-auto">
+        <h2 className="mt-3 text-3xl lg:text-4xl font-light text-gray-900 mb-5">
           Top Wear For Women
         </h2>
+        <div className="w-24 h-px bg-gray-900 mx-auto"> </div>
+        <br />
         <ProductGrid products={products} loading={loading} error={error} />
       </div>
 

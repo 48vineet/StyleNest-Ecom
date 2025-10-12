@@ -14,7 +14,6 @@ import { addToCart } from "../../redux/slices/cartSlice";
 
 function ProductDetails({ productId, productData }) {
   const { id } = useParams();
-
   const dispatch = useDispatch();
   const { selectedProduct, loading, error, similarProducts } = useSelector(
     (state) => state.products
@@ -28,17 +27,13 @@ function ProductDetails({ productId, productData }) {
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const productFetchId = productId || id;
-
-  // Use productData if provided, otherwise fall back to Redux state
   const currentProduct = productData || selectedProduct;
 
   useEffect(() => {
-    // Only fetch if we don't have product data and have an ID
     if (!productData && productFetchId) {
       dispatch(fetchProductById(productFetchId));
     }
 
-    // Always fetch similar products
     if (productFetchId) {
       dispatch(fetchSimilarProducts({ id: productFetchId }));
     }
@@ -51,8 +46,8 @@ function ProductDetails({ productId, productData }) {
   }, [mainImage, currentProduct]);
 
   const handelQuantityChange = (action) => {
-    if (action == "plus") setQuantity((prev) => prev + 1);
-    if (action == "minus" && quantity > 1) setQuantity((prev) => prev - 1);
+    if (action === "plus") setQuantity((prev) => prev + 1);
+    if (action === "minus" && quantity > 1) setQuantity((prev) => prev - 1);
   };
 
   const handelAddToCart = () => {
@@ -83,109 +78,155 @@ function ProductDetails({ productId, productData }) {
       });
   };
 
-  // Show loading only if we're waiting for Redux data and don't have productData
   if (!productData && loading) return <p>Loading...</p>;
   if (!productData && error)
     return <p className="text-red-500">Error: {error}</p>;
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6">
       {currentProduct && (
-        <div className="max-w-6xl bg-white p-8 rounded-lg">
-          <div className="flex flex-col md:flex-row">
-            {/* left thumbnails */}
-            <div className="hidden md:flex flex-col space-y-4 mr-6">
-              {currentProduct.images?.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.url}
-                  alt={image.altText || `Thumbnail ${index}`}
-                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border ${
-                    mainImage === image.url ? "border-black" : "bg-gray-300"
-                  }`}
-                  onClick={() => {
-                    setMainImage(image.url);
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Main Image */}
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-6 md:gap-8">
+            {/* Image Section */}
             <div className="md:w-1/2">
-              <div className="mb-4">
-                {mainImage ? (
-                  <img
-                    src={mainImage}
-                    alt="Main Product"
-                    className="w-full h-auto object-cover rounded-lg"
-                  />
-                ) : (
-                  <p>Loading image...</p>
-                )}
+              {/* Desktop Layout */}
+              <div className="hidden md:flex gap-6">
+                {/* Thumbnails - Desktop */}
+                <div className="flex flex-col space-y-4">
+                  {currentProduct.images?.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image.url}
+                      alt={image.altText || `Thumbnail ${index}`}
+                      className={`w-20 h-20 object-cover rounded-lg cursor-pointer border-2 transition-all duration-200 ${
+                        mainImage === image.url
+                          ? "border-black"
+                          : "border-gray-200"
+                      }`}
+                      onClick={() => setMainImage(image.url)}
+                    />
+                  ))}
+                </div>
+
+                {/* Main Image - Desktop */}
+                <div className="flex-1">
+                  {mainImage ? (
+                    <img
+                      src={mainImage}
+                      alt="Main Product"
+                      className="w-full h-auto object-cover rounded-lg"
+                    />
+                  ) : (
+                    <p>Loading image...</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Mobile Layout */}
+              <div className="md:hidden">
+                {/* Main Image - Mobile */}
+                <div className="mb-4">
+                  {mainImage ? (
+                    <img
+                      src={mainImage}
+                      alt="Main Product"
+                      className="w-full h-auto object-cover rounded-lg"
+                    />
+                  ) : (
+                    <p>Loading image...</p>
+                  )}
+                </div>
+
+                {/* Thumbnails - Mobile */}
+                <div className="flex overflow-x-auto space-x-4 pb-2">
+                  {currentProduct.images?.map((image, index) => (
+                    <img
+                      key={index}
+                      src={image.url}
+                      alt={image.altText || `Thumbnail${index}`}
+                      className={`flex-none w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-lg cursor-pointer border-2 transition-all duration-200 ${
+                        mainImage === image.url
+                          ? "border-black"
+                          : "border-gray-200"
+                      }`}
+                      onClick={() => setMainImage(image.url)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
 
-            {/* Mobile Thumbnail */}
-            <div className="md:hidden flex overflow-x-scroll space-x-4 mb-4">
-              {currentProduct.images?.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.url}
-                  alt={image.altText || `Thumbnail${index}`}
-                  className={`w-20 h-20 object-cover rounded-lg cursor-pointer border ${
-                    mainImage === image.url ? "border-black" : "bg-gray-300"
-                  }`}
-                  onClick={() => setMainImage(image.url)}
-                />
-              ))}
-            </div>
-
             {/* Product Details Section */}
-            <div className="md:w-1/2 md:ml-10">
-              <h1 className="text-2xl md:text-3xl font-semibold mb-2">
-                {currentProduct.name}
-              </h1>
-              <p className="text-lg text-gray-600 mb-1 line-through">
-                {currentProduct.orignalPrice &&
-                  `$${currentProduct.orignalPrice}`}
+            <div className="md:w-1/2 space-y-4 sm:space-y-6">
+              {/* Title & Price */}
+              <div>
+                <h1 className="text-2xl sm:text-3xl md:text-3xl font-light mb-2">
+                  {currentProduct.name}
+                </h1>
+                <div className="flex items-baseline gap-3">
+                  <p className="text-xl sm:text-2xl font-medium text-gray-900">
+                    ${currentProduct.price}
+                  </p>
+                  {currentProduct.orignalPrice && (
+                    <p className="text-lg sm:text-xl text-gray-400 line-through">
+                      ${currentProduct.orignalPrice}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {/* Description */}
+              <p className="text-gray-600 text-sm sm:text-base leading-relaxed">
+                {currentProduct.description}
               </p>
-              <p className="text-xl text-gray-500 mb-2">
-                ${currentProduct.price}
-              </p>
-              <p className="text-gray-500 mb-4">{currentProduct.description}</p>
 
               {/* Colors Section */}
-              <div className="mb-4">
-                <p className="text-gray-700">Colors:</p>
-                <div className="flex gap-2 mt-2">
-                  {currentProduct.colors?.map((colors) => (
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <p className="text-sm font-medium text-gray-900">Color</p>
+                  {selectedcolor && (
+                    <span className="text-xs sm:text-sm text-gray-500 capitalize">
+                      {selectedcolor}
+                    </span>
+                  )}
+                </div>
+                <div className="flex gap-2 sm:gap-3">
+                  {currentProduct.colors?.map((color) => (
                     <button
-                      key={colors}
-                      onClick={() => setSelectedcolor(colors)}
-                      className={`w-8 h-8 rounded-full border ${
-                        selectedcolor === colors
-                          ? "border-black"
-                          : "border-gray-300"
+                      key={color}
+                      onClick={() => setSelectedcolor(color)}
+                      className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 transition-all duration-200 ${
+                        selectedcolor === color
+                          ? "border-black scale-105"
+                          : "border-gray-200"
                       }`}
                       style={{
-                        backgroundColor: colors.toLowerCase(),
-                        filter: "brightness(0.5)",
+                        backgroundColor: color.toLowerCase(),
                       }}
-                    ></button>
+                    />
                   ))}
                 </div>
               </div>
 
               {/* Size Section */}
-              <div className="mb-4">
-                <p className="text-gray-700">Size:</p>
-                <div className="flex gap-2 mt-2">
+              <div>
+                <div className="flex items-center gap-3 mb-3">
+                  <p className="text-sm font-medium text-gray-900">Size</p>
+                  {selectedSize && (
+                    <span className="text-xs sm:text-sm text-gray-500">
+                      {selectedSize}
+                    </span>
+                  )}
+                </div>
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:flex md:flex-wrap gap-2">
                   {currentProduct.sizes?.map((size) => (
                     <button
                       onClick={() => setSelectedSize(size)}
                       key={size}
-                      className={`px-4 py-2 rounded border ${
-                        selectedSize === size ? "bg-black text-white" : ""
+                      className={`px-3 py-2 sm:px-4 sm:py-2 rounded border text-xs sm:text-sm font-medium transition-all duration-200 ${
+                        selectedSize === size
+                          ? "bg-black text-white border-black"
+                          : "bg-white text-gray-900 border-gray-200"
                       }`}
                     >
                       {size}
@@ -195,69 +236,103 @@ function ProductDetails({ productId, productData }) {
               </div>
 
               {/* Quantity Section */}
-              <div className="mb-6">
-                <p className="text-gray-700">Quantity:</p>
-                <div className="flex items-center space-x-4 mt-2">
-                  <button
-                    onClick={() => handelQuantityChange("minus")}
-                    className="px-2 py-1 bg-gray-200 text-lg"
-                  >
-                    -
-                  </button>
-                  <span className="text-lg">{quantity}</span>
-                  <button
-                    onClick={() => handelQuantityChange("plus")}
-                    className="px-2 py-1 bg-gray-200 text-lg"
-                  >
-                    +
-                  </button>
+              <div>
+                <p className="text-sm font-medium text-gray-900 mb-3">
+                  Quantity
+                </p>
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center border border-gray-200 rounded">
+                    <button
+                      onClick={() => handelQuantityChange("minus")}
+                      className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 text-lg disabled:opacity-50"
+                      disabled={quantity <= 1}
+                    >
+                      −
+                    </button>
+                    <span className="w-10 sm:w-12 text-center font-medium text-sm sm:text-base">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => handelQuantityChange("plus")}
+                      className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center text-gray-600 text-lg"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
 
               {/* Add to Cart Button */}
               <button
-                disabled={isButtonDisabled}
+                disabled={isButtonDisabled || !selectedSize || !selectedcolor}
                 onClick={handelAddToCart}
-                className={`bg-black text-white py-2 px-6 rounded w-full mb-4 flex items-center justify-center gap-2 ${
-                  isButtonDisabled
-                    ? "cursor-not-allowed opacity-50"
-                    : "hover:bg-gray-900"
+                className={`w-full py-3 sm:py-4 rounded flex items-center justify-center gap-2 text-sm sm:text-base font-medium transition-all duration-200 ${
+                  isButtonDisabled || !selectedSize || !selectedcolor
+                    ? "cursor-not-allowed opacity-50 bg-gray-200 text-gray-500"
+                    : "bg-black text-white"
                 }`}
               >
-                {isButtonDisabled ? "Adding..." : "ADD TO CART"}
-                <FaCartShopping className="h-5 w-5 font-bold" />
+                {isButtonDisabled ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden sm:inline">Adding to cart...</span>
+                    <span className="sm:hidden">Adding...</span>
+                  </>
+                ) : (
+                  <>
+                    <FaCartShopping className="w-4 h-4 sm:w-5 sm:h-5" />
+                    Add to cart
+                  </>
+                )}
               </button>
 
+              {/* Selection Reminder - Mobile */}
+              {(!selectedSize || !selectedcolor) && (
+                <p className="text-xs text-gray-500 text-center sm:hidden">
+                  Please select size and color
+                </p>
+              )}
+
               {/* Product Characteristics */}
-              <div className="mt-10 text-gray-700">
-                <h3 className="text-xl font-bold mb-4">Characteristics:</h3>
-                <table className="w-full text-left text-sm text-gray-600">
-                  <tbody>
-                    <tr>
-                      <td className="py-1">Brand</td>
-                      <td className="py-1">{currentProduct.brand}</td>
-                    </tr>
-                    <tr>
-                      <td className="py-1">Material</td>
-                      <td className="py-1">{currentProduct.material}</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="pt-4 border-t border-gray-100">
+                <h3 className="text-base font-medium mb-3">Product Details</h3>
+                <div className="space-y-2 text-sm text-gray-600">
+                  {currentProduct.brand && (
+                    <div className="flex justify-between">
+                      <span>Brand</span>
+                      <span className="font-medium">
+                        {currentProduct.brand}
+                      </span>
+                    </div>
+                  )}
+                  {currentProduct.material && (
+                    <div className="flex justify-between">
+                      <span>Material</span>
+                      <span className="font-medium">
+                        {currentProduct.material}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
           {/* Similar Products Section */}
-          <div className="mt-20">
-            <h2 className="text-2xl text-center font-semibold mb-4">
-              You May Also Like
-            </h2>
-            <ProductGrid
-              products={similarProducts}
-              loading={loading}
-              error={error}
-            />
-          </div>
+          {similarProducts && similarProducts.length > 0 && (
+            <div className="mt-16 sm:mt-20 text-center">
+              <h2 className="text-3xl lg:text-4xl font-light text-gray-900 mb-4">
+                You Might Also Like
+              </h2>
+              <div className="w-24 h-px bg-gray-900 mx-auto mb-6"> </div>
+              <br />
+              <ProductGrid
+                products={similarProducts}
+                loading={loading}
+                error={error}
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { RiDeleteBin3Line } from "react-icons/ri";
+import { RiDeleteBin3Line, RiSubtractLine, RiAddLine } from "react-icons/ri";
 import { useDispatch } from "react-redux";
 import {
   updateCartItemQuantity,
@@ -9,7 +9,6 @@ import {
 const CartContents = ({ cart, userId, guestId }) => {
   const dispatch = useDispatch();
 
-  //! handel adding or substracting
   const handleToCart = (productId, delta, quantity, size, color) => {
     const newQuantity = quantity + delta;
     if (newQuantity >= 1) {
@@ -31,59 +30,88 @@ const CartContents = ({ cart, userId, guestId }) => {
   };
 
   return (
-    <div>
+    <div className="space-y-6">
       {cart.products.map((product, index) => {
         return (
           <div
             key={index}
-            className="flex items-start justify-between py-4 border-b border-gray-300"
+            className="flex items-start gap-4 pb-6 border-b border-gray-100 last:border-b-0"
           >
-            <div className="flex items-center">
+            {/* Product Image */}
+            <div className="flex-shrink-0">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-20 h-24 object-cover mr-4 rounded"
+                className="w-24 h-auto object-contain rounded-lg"
               />
-              <div>
-                <h3>{product.name}</h3>
-                <p className="text-sm text-gray-500">
-                  Size: {product.size} | Color: {product.color}
-                </p>
-                <div className="flex items-center mt-2">
-                  <button
-                    onClick={() =>
-                      handleToCart(
-                        product.productId,
-                        -1,
-                        product.quantity,
-                        product.size,
-                        product.color
-                      )
-                    }
-                    className="bg-white hover:bg-gray-200 rounded-md w-8 h-8 text-lg font-bold flex items-center justify-center"
-                  >
-                    -
-                  </button>
-                  <span className="mx-3">{product.quantity}</span>
-                  <button
-                    onClick={() =>
-                      handleToCart(
-                        product.productId,
-                        1,
-                        product.quantity,
-                        product.size,
-                        product.color
-                      )
-                    }
-                    className="bg-white hover:bg-gray-200 rounded-md w-8 h-8 text-lg font-bold flex items-center justify-center"
-                  >
-                    +
-                  </button>
-                </div>
+            </div>
+
+            {/* Product Details */}
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-medium text-gray-900 mb-2">
+                {product.name}
+              </h3>
+
+              <div className="flex items-center gap-4 text-sm text-gray-500 mb-4">
+                <span>
+                  Size:{" "}
+                  <span className="text-gray-700 font-medium">
+                    {product.size}
+                  </span>
+                </span>
+                <span>
+                  Color:{" "}
+                  <span className="text-gray-700 font-medium">
+                    {product.color}
+                  </span>
+                </span>
+              </div>
+
+              {/* Quantity Controls */}
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() =>
+                    handleToCart(
+                      product.productId,
+                      -1,
+                      product.quantity,
+                      product.size,
+                      product.color
+                    )
+                  }
+                  className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                  disabled={product.quantity <= 1}
+                >
+                  <RiSubtractLine className="w-4 h-4 text-gray-600" />
+                </button>
+
+                <span className="text-base font-medium text-gray-900 min-w-[24px] text-center">
+                  {product.quantity}
+                </span>
+
+                <button
+                  onClick={() =>
+                    handleToCart(
+                      product.productId,
+                      1,
+                      product.quantity,
+                      product.size,
+                      product.color
+                    )
+                  }
+                  className="w-8 h-8 flex items-center justify-center border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
+                  <RiAddLine className="w-4 h-4 text-gray-600" />
+                </button>
               </div>
             </div>
-            <div>
-              <p>$ {product.price.toLocaleString()}</p>
+
+            {/* Price and Remove */}
+            <div className="flex flex-col items-end gap-3">
+              <p className="text-lg font-semibold text-gray-900">
+                ${product.price.toLocaleString()}
+              </p>
+
               <button
                 onClick={() =>
                   handleRemoveFromCart(
@@ -92,8 +120,9 @@ const CartContents = ({ cart, userId, guestId }) => {
                     product.color
                   )
                 }
+                className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
               >
-                <RiDeleteBin3Line className="h-6 w-6 mt-3 ms-2 text-red-600"></RiDeleteBin3Line>
+                <RiDeleteBin3Line className="w-4 h-4" />
               </button>
             </div>
           </div>
