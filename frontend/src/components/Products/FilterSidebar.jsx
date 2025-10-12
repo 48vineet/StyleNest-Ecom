@@ -107,7 +107,7 @@ const FilterSidebar = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-6 lg:px-8">
       <h3 className="text-xl font-medium text-gray-800 mb-4">Filter</h3>
       {/* Category Filter */}
       <div className="mb-6">

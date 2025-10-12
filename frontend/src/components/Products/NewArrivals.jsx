@@ -222,7 +222,7 @@ const NewArrivals = () => {
               alt={product.images[0]?.altText || product.name}
               className="w-full h-[500px] object-cover rounded-lg"
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-white/20 backdrop-blur-sm text-white p-4 rounded-b-lg">
+            <div className="absolute bottom-0 left-0 right-0 bg-white/20 backdrop-blur-sm text-gray-900 p-4 rounded-b-lg">
               <Link to={`/product/${product._id}`} className="block">
                 <h4 className="font-medium text-lg">{product.name}</h4>
                 <p className="mt-1 text-xl font-semibold">${product.price}</p>
