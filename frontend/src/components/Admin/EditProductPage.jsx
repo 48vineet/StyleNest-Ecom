@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   fetchProductById,
   updateProduct,
 } from "../../redux/slices/productsSlice";
-import axios from "axios";
 
 const EditProductPage = () => {
   const dispatch = useDispatch();
