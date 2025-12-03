@@ -1,4 +1,4 @@
-```markdown
+
 # StyleNest-Ecom
 
 [![Repo size](https://img.shields.io/github/repo-size/48vineet/StyleNest-Ecom)](https://github.com/48vineet/StyleNest-Ecom)
@@ -242,4 +242,4 @@ StyleNest-Ecom is intentionally approachable: clear JavaScript code, friendly to
 - Open a PR that adds this README to the repository
 
 We welcome contributions from everyone — whether it's a typo fix, a bug report, a new component, or a whole feature. Please read the contributing section and open an issue if in doubt. Happy hacking! 🚀
-```
+
